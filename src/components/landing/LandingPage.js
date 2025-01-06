@@ -162,9 +162,9 @@ const LandingPage = () => {
           <div className="flex justify-between h-20">
             <div className="flex items-center">
               <motion.img
-                className="h-12 w-auto"
-                src="/logo (2).png"
-                alt="BIGOCA Logo"
+                  className="h-12 w-auto"
+                  src="/logo (2).png"
+                  alt="BIGOCA Logo"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               />
@@ -174,7 +174,7 @@ const LandingPage = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                BIGOCA
+                  BIGOCA
               </motion.span>
             </div>
 
@@ -199,12 +199,12 @@ const LandingPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link
-                  to="/login"
+              <Link
+                to="/login"
                   className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-primary-600 hover:bg-primary-700 shadow-lg hover:shadow-xl transition-all duration-200"
-                >
-                  Login
-                </Link>
+              >
+                Login
+              </Link>
               </motion.div>
             </div>
 
@@ -408,12 +408,12 @@ const LandingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
             >
-              <Link
-                to="/login"
+                <Link
+                  to="/login"
                 className="px-8 py-4 text-lg font-semibold rounded-full bg-white text-primary-600 hover:bg-gray-100 transition-colors duration-200 shadow-lg hover:shadow-xl"
-              >
-                Get Started
-              </Link>
+                >
+                  Get Started
+                </Link>
               <a
                 href="#features"
                 className="px-8 py-4 text-lg font-semibold rounded-full bg-primary-600 text-white hover:bg-primary-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
@@ -772,7 +772,7 @@ const LandingPage = () => {
                         </svg>
                     </motion.a>
                     )}
-                  </div>
+                </div>
               ))}
             </motion.div>
           </div>
