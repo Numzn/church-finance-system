@@ -1,0 +1,7 @@
+node_modules/
+build/
+dist/
+coverage/
+*.test.js
+*.spec.js
+*.config.js 

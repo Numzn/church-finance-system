@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isValidSubmission() {
+      return request.resource.data.keys().hasAll(['memberId', 'memberName', 'tithe', 'offering', 'date', 'createdBy']) &&
+             request.resource.data.createdBy == request.auth.uid &&
+             request.resource.data.tithe is number &&
+             request.resource.data.offering is number;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Members collection
+    match /members/{memberId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Submissions collection
+    match /submissions/{submissionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidSubmission();
+      allow update, write: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // Settings collection
+    match /settings/{settingId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Deny access to all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+} 

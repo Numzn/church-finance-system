@@ -1,0 +1,90 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid));
+    }
+    
+    // Enhanced file validation
+    function isValidFile() {
+      return request.resource.size < 5 * 1024 * 1024 // 5MB limit
+          && (request.resource.contentType.matches('image/.*') 
+              || request.resource.contentType.matches('application/pdf')
+              || request.resource.contentType.matches('application/vnd.ms-excel')
+              || request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+              || request.resource.contentType.matches('text/csv'))
+          && request.resource.size > 0
+          && request.resource.name.size() < 100
+          && request.resource.name.matches('^[A-Za-z0-9_.-]+$');
+    }
+
+    // Rate limiting
+    function notRateLimited() {
+      return request.time > resource.metadata.lastUpload + duration.value(1, 'm')
+          || resource.metadata.lastUpload == null;
+    }
+
+    // Virus scan metadata check
+    function isVirusScanned() {
+      return resource.metadata.virusScanned == 'true' 
+          && resource.metadata.virusStatus == 'clean';
+    }
+
+    // Member profile pictures with enhanced security
+    match /profile_pictures/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() 
+        && request.auth.uid == userId 
+        && isValidFile()
+        && request.resource.contentType.matches('image/.*')
+        && notRateLimited();
+      allow delete: if isAdmin() || request.auth.uid == userId;
+    }
+
+    // Receipt files with enhanced validation
+    match /receipts/{receiptId} {
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.metadata.generatedBy ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated() 
+        && isValidFile()
+        && request.resource.contentType == 'application/pdf'
+        && notRateLimited()
+        && request.resource.metadata.keys().hasAll(['submissionId', 'generatedBy', 'generatedAt'])
+        && request.resource.metadata.generatedBy == request.auth.uid;
+      allow update: if isAdmin() && isVirusScanned();
+      allow delete: if isAdmin();
+    }
+
+    // CSV/Excel uploads for imports
+    match /imports/{fileName} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && isValidFile()
+        && (request.resource.contentType == 'text/csv'
+            || request.resource.contentType.matches('application/vnd.ms-excel')
+            || request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+        && notRateLimited();
+      allow delete: if isAdmin();
+    }
+
+    // Backup files with strict access
+    match /backups/{fileName} {
+      allow read: if isAdmin();
+      allow write: if isAdmin() && notRateLimited();
+      allow delete: if isAdmin();
+    }
+
+    // Prevent access to all other files
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+} 
