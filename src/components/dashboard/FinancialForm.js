@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, getDocs } from 'firebase/firestore';
 import { db, auth } from '../../utils/firebase';
 import { getCurrentWeekNumber } from '../../utils/helpers';

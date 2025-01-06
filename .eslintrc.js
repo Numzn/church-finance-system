@@ -7,7 +7,8 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended'
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended'
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -21,8 +22,13 @@ module.exports = {
       version: 'detect'
     }
   },
+  plugins: ['react', 'react-hooks'],
   rules: {
     'react/prop-types': 'off',
-    'no-unused-vars': 'warn'
+    'no-unused-vars': 'warn',
+    'react/react-in-jsx-scope': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'react/no-unescaped-entities': 'warn'
   }
 }; 

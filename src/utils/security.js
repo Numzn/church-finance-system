@@ -108,7 +108,7 @@ export const sanitizeInput = (input) => {
     .replace(/&#/gi, '') // Remove HTML entities
     .replace(/\\x[0-9a-f]{2}/gi, '') // Remove hex escapes
     .replace(/\\u[0-9a-f]{4}/gi, '') // Remove unicode escapes
-    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+    .replace(/[\x20-\x7E]/g, (char) => char) // Keep only printable ASCII characters
     .trim();
 };
 
@@ -173,8 +173,8 @@ export const validateFileUpload = (file) => {
         return;
       }
 
-      // Check for executable content
-      if (/\0|PK\x03\x04/.test(content)) {
+      // Check for executable content using hex values
+      if (content.includes('\x00') || (content.includes('PK') && content.includes('\x03') && content.includes('\x04'))) {
         reject(new Error('File contains executable content'));
         return;
       }
