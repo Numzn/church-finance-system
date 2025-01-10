@@ -1,5 +1,6 @@
 # dependencies
 node_modules
+<<<<<<< HEAD
 /.pnp
 .pnp.js
 
@@ -8,6 +9,25 @@ node_modules
 
 # production
 /build
+=======
+node_modules/
+jspm_packages/
+/.pnp
+.pnp.js
+bower_components
+
+# testing
+/coverage
+coverage
+*.lcov
+.nyc_output
+
+# production
+/build
+build/Release
+dist
+out
+>>>>>>> eefdd63bae29483e3d03628a2a9d444608d67913
 
 # misc
 .DS_Store
@@ -16,17 +36,81 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+<<<<<<< HEAD
+=======
+
+# Logs
+logs
+>>>>>>> eefdd63bae29483e3d03628a2a9d444608d67913
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
+=======
+lerna-debug.log*
+.pnpm-debug.log*
+>>>>>>> eefdd63bae29483e3d03628a2a9d444608d67913
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+<<<<<<< HEAD
 
 # Firebase
 .firebase/
 *.log
+=======
+.vscode-test
+
+# Firebase
+.firebase/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cache directories
+.cache/
+.parcel-cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.npm
+.eslintcache
+.stylelintcache
+.docusaurus
+.temp
+.dynamodb/
+
+# TypeScript
+*.tsbuildinfo
+
+# Next.js
+.next
+
+# Nuxt.js
+.nuxt
+
+# Gatsby
+.cache/
+
+# Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+.yarn-integrity
+
+# Other
+.lock-wscript
+.serverless/
+.fusebox/
+.tern-port
+>>>>>>> eefdd63bae29483e3d03628a2a9d444608d67913

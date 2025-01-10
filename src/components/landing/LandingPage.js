@@ -656,7 +656,7 @@ const LandingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              Have questions? We're here to help you get started.
+              We&apos;re here to help you get started.
             </motion.p>
           </motion.div>
 
