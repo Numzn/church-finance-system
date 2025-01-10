@@ -1,6 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
+// Skip verification in production (Vercel deployment)
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+  console.log('✓ Skipping environment verification in production');
+  process.exit(0);
+}
+
 const requiredEnvVars = [
   'REACT_APP_FIREBASE_API_KEY',
   'REACT_APP_FIREBASE_AUTH_DOMAIN',
