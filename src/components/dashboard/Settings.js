@@ -342,7 +342,7 @@ function Settings() {
                           </p>
                         </div>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                          To confirm, please type "DELETE ALL DATA" in the field below:
+                          To confirm, please type &quot;DELETE ALL DATA&quot; in the field below:
                         </p>
                         <input
                           type="text"

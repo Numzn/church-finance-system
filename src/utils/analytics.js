@@ -124,7 +124,7 @@ export const calculateQuarterlyStats = (submissions = []) => {
     if (!date) return;
 
     const month = date.getMonth();
-    const quarter = Object.entries(quarters).find(([key, data]) => data.months.includes(month))?.[0];
+    const quarter = Object.entries(quarters).find(([key]) => data.months.includes(month))?.[0];
     if (quarter) {
       quarters[quarter].tithes += parseAmount(submission.tithe);
       quarters[quarter].offerings += parseAmount(submission.offering);
