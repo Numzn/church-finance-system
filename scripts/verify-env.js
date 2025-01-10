@@ -5,6 +5,12 @@ const path = require('path');
 console.log('Environment:', process.env.NODE_ENV || 'development');
 console.log('Is Vercel?', process.env.VERCEL ? 'Yes' : 'No');
 
+// Skip all checks in production/Vercel environment
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+  console.log('Running in production/Vercel environment - skipping environment file checks');
+  process.exit(0);
+}
+
 const requiredEnvVars = [
   'REACT_APP_FIREBASE_API_KEY',
   'REACT_APP_FIREBASE_AUTH_DOMAIN',
@@ -13,20 +19,6 @@ const requiredEnvVars = [
   'REACT_APP_FIREBASE_MESSAGING_SENDER_ID',
   'REACT_APP_FIREBASE_APP_ID'
 ];
-
-// Check if variables exist in process.env first
-const processEnvVars = requiredEnvVars.filter(varName => process.env[varName]);
-if (processEnvVars.length > 0) {
-  console.log('\x1b[32m%s\x1b[0m', '✓ Found environment variables in process.env:', processEnvVars);
-  process.exit(0);
-}
-
-// If we're in production or Vercel and didn't find vars, warn but continue
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-  console.warn('\x1b[33m%s\x1b[0m', '⚠ Warning: Running in production but no environment variables found in process.env');
-  console.warn('\x1b[33m%s\x1b[0m', '⚠ This might cause issues if variables are not set in the deployment platform');
-  process.exit(0);
-}
 
 function verifyEnvFile(filePath) {
   try {
