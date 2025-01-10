@@ -1,11 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Skip verification in production (Vercel deployment)
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-  console.log('✓ Skipping environment verification in production');
-  process.exit(0);
-}
+// Log environment type
+console.log('Environment:', process.env.NODE_ENV || 'development');
+console.log('Is Vercel?', process.env.VERCEL ? 'Yes' : 'No');
 
 const requiredEnvVars = [
   'REACT_APP_FIREBASE_API_KEY',
@@ -16,8 +14,23 @@ const requiredEnvVars = [
   'REACT_APP_FIREBASE_APP_ID'
 ];
 
+// Check if variables exist in process.env first
+const processEnvVars = requiredEnvVars.filter(varName => process.env[varName]);
+if (processEnvVars.length > 0) {
+  console.log('\x1b[32m%s\x1b[0m', '✓ Found environment variables in process.env:', processEnvVars);
+  process.exit(0);
+}
+
+// If we're in production or Vercel and didn't find vars, warn but continue
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+  console.warn('\x1b[33m%s\x1b[0m', '⚠ Warning: Running in production but no environment variables found in process.env');
+  console.warn('\x1b[33m%s\x1b[0m', '⚠ This might cause issues if variables are not set in the deployment platform');
+  process.exit(0);
+}
+
 function verifyEnvFile(filePath) {
   try {
+    console.log('Checking env file:', filePath);
     const envContent = fs.readFileSync(filePath, 'utf8');
     const envVars = {};
     
@@ -51,15 +64,15 @@ function verifyEnvFile(filePath) {
       process.exit(1);
     }
 
-    console.log('\x1b[32m%s\x1b[0m', '✓ Environment variables verified successfully');
+    console.log('\x1b[32m%s\x1b[0m', '✓ Environment variables verified successfully in file:', filePath);
     return true;
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.error('\x1b[31m%s\x1b[0m', `Error: Environment file not found: ${filePath}`);
+      console.log(`Note: Environment file not found: ${filePath}`);
     } else {
       console.error('\x1b[31m%s\x1b[0m', `Error reading environment file: ${error.message}`);
     }
-    process.exit(1);
+    return false;
   }
 }
 
@@ -78,5 +91,7 @@ for (const envPath of envPaths) {
 
 if (!verified) {
   console.error('\x1b[31m%s\x1b[0m', 'Error: No environment files found. Please create either .env or .env.local');
+  console.log('Looking for files in:', process.cwd());
+  console.log('Available files:', fs.readdirSync(process.cwd()));
   process.exit(1);
 } 
