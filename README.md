@@ -119,3 +119,9 @@ npm update
 ## License
 
 Private - All rights reserved
+
+## Deployment Status
+
+[![Vercel Deployment Status](https://img.shields.io/badge/Vercel-Deployed-success)](https://vercel.com/team_nqhjDMrqse0OGSioEwEtTKti/prj_hkmgbdo5d4SHoM7JNKW7gcyHmdPm)
+
+Last verified: January 2024
