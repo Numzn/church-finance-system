@@ -7,10 +7,32 @@ console.log('Is Vercel?', process.env.VERCEL ? 'Yes' : 'No');
 
 // Skip all checks in production/Vercel environment
 if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-  console.log('Running in production/Vercel environment - skipping environment file checks');
+  console.log('Running in production/Vercel environment - checking environment variables directly');
+  
+  const requiredEnvVars = [
+    'REACT_APP_FIREBASE_API_KEY',
+    'REACT_APP_FIREBASE_AUTH_DOMAIN',
+    'REACT_APP_FIREBASE_PROJECT_ID',
+    'REACT_APP_FIREBASE_STORAGE_BUCKET',
+    'REACT_APP_FIREBASE_MESSAGING_SENDER_ID',
+    'REACT_APP_FIREBASE_APP_ID'
+  ];
+
+  // Check if variables exist in process.env
+  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+  
+  if (missingVars.length > 0) {
+    console.warn('Warning: Some environment variables are missing:', missingVars);
+    // Don't exit with error in production, just warn
+    console.log('Continuing build process despite missing variables...');
+  } else {
+    console.log('✓ All required environment variables are present');
+  }
+  
   process.exit(0);
 }
 
+// Development environment checks
 const requiredEnvVars = [
   'REACT_APP_FIREBASE_API_KEY',
   'REACT_APP_FIREBASE_AUTH_DOMAIN',
@@ -68,22 +90,22 @@ function verifyEnvFile(filePath) {
   }
 }
 
-// Check both .env and .env.local
-const envPaths = [
-  path.resolve(process.cwd(), '.env'),
-  path.resolve(process.cwd(), '.env.local')
-];
+// Check both .env and .env.local in development
+if (process.env.NODE_ENV !== 'production') {
+  const envPaths = [
+    path.resolve(process.cwd(), '.env'),
+    path.resolve(process.cwd(), '.env.local')
+  ];
 
-let verified = false;
-for (const envPath of envPaths) {
-  if (fs.existsSync(envPath)) {
-    verified = verifyEnvFile(envPath) || verified;
+  let verified = false;
+  for (const envPath of envPaths) {
+    if (fs.existsSync(envPath)) {
+      verified = verifyEnvFile(envPath) || verified;
+    }
   }
-}
 
-if (!verified) {
-  console.error('\x1b[31m%s\x1b[0m', 'Error: No environment files found. Please create either .env or .env.local');
-  console.log('Looking for files in:', process.cwd());
-  console.log('Available files:', fs.readdirSync(process.cwd()));
-  process.exit(1);
+  if (!verified) {
+    console.error('\x1b[31m%s\x1b[0m', 'Error: No environment files found in development. Please create either .env or .env.local');
+    process.exit(1);
+  }
 } 
